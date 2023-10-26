@@ -34,7 +34,7 @@ pub struct RWCArgs {
 pub fn get_buffer_from_args(args: &RWCArgs) -> Result<String, Box<dyn Error>> {
     // File path supplied as first parameter.
     if let Some(source) = &args.source {
-        return read_file_contents(source.into());
+        read_file_contents(source.into())
     
     // Some stdin is detected.
     } else if data_in_stdin() {
@@ -65,13 +65,13 @@ pub fn get_word_count(buffer: &String) -> usize {
 fn read_file_contents(file_path: String) -> Result<String, Box<dyn Error>> {
     let file_contents= fs::read_to_string(file_path)?;
 
-    return Ok(file_contents);
+    Ok(file_contents)
 }
 
 /// Check if there is data in stdin.
 #[mockable]
 fn data_in_stdin() -> bool {
-    return !atty::is(atty::Stream::Stdin);
+    !atty::is(atty::Stream::Stdin)
 }
 
 /// Collect all existing lines from stdin, and return them as a single string.
@@ -81,14 +81,14 @@ fn read_from_stdin() -> String {
     // is this fast for large buffers? probably not. Looks rusty though
     let mut acc = io::stdin()
         .lines()
-        .filter_map(|line| return line.ok())
+        .filter_map(|line| line.ok())
         .collect::<Vec<String>>()
         .join("\n");
 
     // NOTE: Append final newline character to match behavior of wc.
     acc.push('\n');
 
-    return acc;
+    acc
 }
 
 /// Module containing common testing utility for unit and integration tests.
@@ -177,8 +177,8 @@ pub mod tests {
         let dummy_string = "asdf";
 
         // Mocks out the inner call to read_from_stdin to return a dummy string
-        data_in_stdin.mock_safe(|| return MockResult::Return(true));
-        read_from_stdin.mock_safe(|| return MockResult::Return(dummy_string.to_string()));
+        data_in_stdin.mock_safe(|| MockResult::Return(true));
+        read_from_stdin.mock_safe(|| MockResult::Return(dummy_string.to_string()));
 
         let args = RWCArgs {
             lines: false,
