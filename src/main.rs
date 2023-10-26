@@ -17,7 +17,7 @@ fn main() {
             process::exit(1);
         }
     };
-
+    
     // Perform requested operation. Defaults to line count.
     let count: usize;
 
