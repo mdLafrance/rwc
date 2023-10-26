@@ -18,15 +18,14 @@ fn main() {
             process::exit(1);
         }
     };
-    
-    // Perform requested operation. 
+
+    // Perform requested operation.
     if args.chars {
         println!("{:}", get_char_count(&buffer));
-    } else if args.lines{
+    } else if args.lines {
         println!("{:}", get_line_count(&buffer));
     } else if args.words {
         println!("{:}", get_word_count(&buffer))
-    
     } else {
         // Special case - no args. Print all.
         println!(
