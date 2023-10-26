@@ -4,22 +4,17 @@
 
 #[cfg(test)]
 mod integration_tests {
-    use assert_cmd::{prelude::*, output};
-    use predicates::prelude::*;
-    use core::slice::SlicePattern;
+    use assert_cmd::prelude::*;
     use std::process::Command;
     use std::path::Path;
     use std::env;
-
-    use pathdiff::diff_paths;
 
     use rwc::test_utils::get_test_buffer_path;
 
     fn get_relative_path(target_path: String) -> String {
         let crate_root = env::var("CARGO_MANIFEST_DIR").expect("Cargo manifest dir not defined in environment.");
-        let test_buffer_path = get_test_buffer_path();
 
-        let result = Path::new(&test_buffer_path).strip_prefix(Path::new(&crate_root)).expect("Could not strip prefix path.");
+        let result = Path::new(&target_path).strip_prefix(Path::new(&crate_root)).expect("Could not strip prefix path.");
 
         return "./".to_string() + &result.to_str().expect("Couldn't retrieve string from result.").to_string();
     }

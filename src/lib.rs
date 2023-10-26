@@ -117,7 +117,7 @@ pub mod test_utils {
 /// Unit tests for the rwc helper lib
 pub mod tests {
     use super::*;
-    use std::{env, fs};
+    use std::fs;
     use std::path::Path;
     use mocktopus::mocking::*;
     use super::test_utils::*;
