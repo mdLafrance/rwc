@@ -1,3 +1,5 @@
+#![deny(clippy::implicit_return)]
+#![allow(clippy::needless_return)]
 #![cfg_attr(test, feature(proc_macro_hygiene))]
 
 use std::process;
