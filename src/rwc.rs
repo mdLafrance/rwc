@@ -1,3 +1,5 @@
+#![cfg_attr(test, feature(proc_macro_hygiene))]
+
 /// Helper functions for rwc cli
 
 use std::{error::Error, fs, io, };
@@ -5,6 +7,8 @@ use std::{error::Error, fs, io, };
 use atty;
 
 use clap::Parser;
+
+use mocktopus::macros::*;
 
 #[derive(Parser, Debug)]
 #[command(author, about)]
@@ -69,11 +73,13 @@ fn read_file_contents(file_path: String) -> Result<String, Box<dyn Error>> {
 }
 
 /// Check if there is data in stdin.
+#[mockable]
 fn data_in_stdin() -> bool {
     return !atty::is(atty::Stream::Stdin);
 }
 
 /// Collect all existing lines from stdin, and return them as a single string.
+#[mockable]
 fn read_from_stdin() -> String {
     // Collect all lines into accumulator string.
     // is this fast for large buffers? probably not. Looks rusty though
@@ -87,4 +93,109 @@ fn read_from_stdin() -> String {
     acc.push_str("\n".into());
 
     return acc;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::{env, fs};
+    use std::path::Path;
+    use mocktopus::mocking::*;
+
+    fn get_test_buffer_path() -> String {
+        // Get crate root from env
+        let crate_root = env::var("CARGO_MANIFEST_DIR").expect("Cargo manifest dir not defined in environment.");
+
+        // Build path to expected test file
+        return Path::new(&crate_root)
+            .join("resources")
+            .join("test")
+            .join("test_input.txt")
+            .into_os_string()
+            .into_string()
+            .expect("Could not decode file path into string");
+    }
+
+    /// Read a known example buffer to use for testing.
+    fn get_test_buffer() -> String {
+        let buffer_path = get_test_buffer_path();
+        let test_buffer_file_path = Path::new(&buffer_path);
+
+        // Check if file can be found
+        if !test_buffer_file_path.is_file() {
+            panic!("Couldn't find test file: {:?}", test_buffer_file_path);
+        }
+
+        // Try and return file contents
+        return fs::read_to_string(test_buffer_file_path.as_os_str())
+            .expect(&format!("Couldn't read test file: {:?}", test_buffer_file_path));
+    }
+
+    #[test]
+    /// Test if we can properly load the testing resource
+    fn test_get_test_buffer() {
+        assert!(!get_test_buffer().is_empty());
+    }
+
+    #[test]
+    fn test_get_line_count() {
+        let buf = get_test_buffer();
+
+        assert_eq!(get_line_count(&buf), 43);
+        assert_eq!(get_line_count(&"asdf".to_string()), 0);
+    }
+
+    #[test]
+    fn test_get_char_count() {
+        let buf = get_test_buffer();
+
+        assert_eq!(get_char_count(&buf), 1038);
+        assert_eq!(get_char_count(&"asdf".to_string()), 4);
+    }
+
+    #[test]
+    fn test_get_word_count() {
+        let buf = get_test_buffer();
+
+        assert_eq!(get_word_count(&buf), 177);
+        assert_eq!(get_word_count(&"asdf".to_string()), 1);
+    }
+
+    #[test]
+    fn test_read_file_contents() {
+        let test_buffer = read_file_contents(get_test_buffer_path()).expect("Couldn't read test buffer");
+
+        assert_eq!(get_test_buffer(), test_buffer);
+    }
+
+    #[test]
+    fn test_get_buffer_from_args_from_stdin() {
+        let dummy_string = "asdf";
+
+        // Mocks out the inner call to read_from_stdin to return a dummy string
+        data_in_stdin.mock_safe(|| MockResult::Return(true));
+        read_from_stdin.mock_safe(|| MockResult::Return(dummy_string.to_string()));
+
+        let args = RWCArgs {
+            lines: false,
+            chars: false,
+            words: false,
+            source: None
+        };
+
+        assert_eq!(get_buffer_from_args(&args).expect("Failed to run mocked buffer resolution"), dummy_string);
+    }
+
+    #[test]
+    fn test_get_buffer_from_args_from_file() {
+        let args = RWCArgs {
+            lines: false,
+            chars: false,
+            words: false,
+            source: Some(get_test_buffer_path())
+        };
+
+        assert_eq!(get_buffer_from_args(&args).expect("Failed to run mocked buffer resolution"), get_test_buffer());
+
+    }
 }
