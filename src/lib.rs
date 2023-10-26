@@ -5,7 +5,7 @@
 
 use std::{error::Error, fs, io, };
 
-use atty;
+
 
 use clap::Parser;
 
@@ -39,7 +39,7 @@ pub struct RWCArgs {
 pub fn get_buffer_from_args(args: &RWCArgs) -> Result<String, Box<dyn Error>> {
     // File path supplied as first parameter.
     if let Some(source) = &args.source {
-        return Ok(read_file_contents(source.into())?);
+        return read_file_contents(source.into());
     
     // Some stdin is detected.
     } else if data_in_stdin() {
@@ -53,7 +53,7 @@ pub fn get_buffer_from_args(args: &RWCArgs) -> Result<String, Box<dyn Error>> {
 
 /// Counts the number of newline characters in the given buffer.
 pub fn get_line_count(buffer: &String) -> usize {
-    return buffer.matches("\n").count();
+    return buffer.matches('\n').count();
 }
 
 /// Get the number of characters in the buffer.
@@ -86,12 +86,12 @@ fn read_from_stdin() -> String {
     // is this fast for large buffers? probably not. Looks rusty though
     let mut acc = io::stdin()
         .lines()
-        .filter_map(|line| line.ok())
+        .filter_map(|line| return line.ok())
         .collect::<Vec<String>>()
         .join("\n");
 
     // NOTE: Append final newline character to match behavior of wc.
-    acc.push_str("\n".into());
+    acc.push('\n');
 
     return acc;
 }
@@ -137,7 +137,7 @@ pub mod tests {
 
         // Try and return file contents
         return fs::read_to_string(test_buffer_file_path.as_os_str())
-            .expect(&format!("Couldn't read test file: {:?}", test_buffer_file_path));
+            .unwrap_or_else(|_| panic!("Couldn't read test file: {:?}", test_buffer_file_path));
     }
 
     #[test]
@@ -182,8 +182,8 @@ pub mod tests {
         let dummy_string = "asdf";
 
         // Mocks out the inner call to read_from_stdin to return a dummy string
-        data_in_stdin.mock_safe(|| MockResult::Return(true));
-        read_from_stdin.mock_safe(|| MockResult::Return(dummy_string.to_string()));
+        data_in_stdin.mock_safe(|| return MockResult::Return(true));
+        read_from_stdin.mock_safe(|| return MockResult::Return(dummy_string.to_string()));
 
         let args = RWCArgs {
             lines: false,

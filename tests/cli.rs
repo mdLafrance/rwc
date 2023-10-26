@@ -16,7 +16,7 @@ mod integration_tests {
 
         let result = Path::new(&target_path).strip_prefix(Path::new(&crate_root)).expect("Could not strip prefix path.");
 
-        return "./".to_string() + &result.to_str().expect("Couldn't retrieve string from result.").to_string();
+        return "./".to_string() + result.to_str().expect("Couldn't retrieve string from result.");
     }
 
     /// Returns a command object which already has the relative path of the test buffer bound as an argument.
@@ -27,11 +27,11 @@ mod integration_tests {
 
         cmd.arg(relative_file_path);
 
-        return cmd;
+        cmd
     }
 
     fn decode_stdout(stdout: &[u8]) -> String {
-        return String::from_utf8(stdout.to_vec()).expect("Could not decode stdout as utf-8");
+        String::from_utf8(stdout.to_vec()).expect("Could not decode stdout as utf-8")
     }
 
     #[test]
