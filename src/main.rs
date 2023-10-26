@@ -18,16 +18,26 @@ fn main() {
         }
     };
     
-    // Perform requested operation. Defaults to line count.
-    let count: usize;
-
+    // Perform requested operation. 
     if args.bytes {
-        count = get_byte_count(&buffer);
+        println!("{:}", get_byte_count(&buffer));
     } else if args.chars {
-        count = get_char_count(&buffer);
+        println!("{:}", get_char_count(&buffer));
+    } else if args.lines{
+        println!("{:}", get_line_count(&buffer));
+    
+    // Special case - no args. Print all.
     } else {
-        count = get_line_count(&buffer);
+        println!(
+            "\t{}\t{}\t{}\t{}",
+            get_byte_count(&buffer),
+            get_char_count(&buffer),
+            get_line_count(&buffer),
+            match args.source {
+                Some(filename) => filename,
+                _ => "".to_string()
+            } 
+        );
     }
 
-    println!("{:}", count);
 }
