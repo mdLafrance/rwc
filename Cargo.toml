@@ -10,6 +10,9 @@ description = "A simple clone of the unix wc command written in the crab languag
 atty = "0.2.14"
 clap = { version = "4.4.7", features = ["derive"] }
 mocktopus = "0.8.0"
+pathdiff = "0.2.1"
 
 [dev-dependencies]
+assert_cmd = "2.0.12"
 cargo-llvm-cov = "0.5.35"
+predicates = "3.0.4"

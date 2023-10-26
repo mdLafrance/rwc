@@ -1,9 +1,11 @@
+#![cfg_attr(test, feature(proc_macro_hygiene))]
+
 use std::process;
 
 use clap::Parser;
 
-mod rwc;
 use rwc::*;
+
 
 fn main() {
     // Parse cli args.

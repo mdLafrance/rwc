@@ -1,5 +1,3 @@
-#![cfg_attr(test, feature(proc_macro_hygiene))]
-
 /// Helper functions for rwc cli
 
 use std::{error::Error, fs, io, };
@@ -95,14 +93,12 @@ fn read_from_stdin() -> String {
     return acc;
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::{env, fs};
+/// Module containing common testing utility for unit and integration tests.
+pub mod test_utils {
+    use std::env;
     use std::path::Path;
-    use mocktopus::mocking::*;
 
-    fn get_test_buffer_path() -> String {
+    pub fn get_test_buffer_path() -> String {
         // Get crate root from env
         let crate_root = env::var("CARGO_MANIFEST_DIR").expect("Cargo manifest dir not defined in environment.");
 
@@ -115,6 +111,16 @@ mod tests {
             .into_string()
             .expect("Could not decode file path into string");
     }
+}
+
+#[cfg(test)]
+/// Unit tests for the rwc helper lib
+pub mod tests {
+    use super::*;
+    use std::{env, fs};
+    use std::path::Path;
+    use mocktopus::mocking::*;
+    use super::test_utils::*;
 
     /// Read a known example buffer to use for testing.
     fn get_test_buffer() -> String {
