@@ -33,10 +33,7 @@ fn main() {
             get_line_count(&buffer),
             get_word_count(&buffer),
             get_char_count(&buffer),
-            match args.source {
-                Some(filename) => filename,
-                _ => "".to_string()
-            } 
+            args.source.unwrap_or("".to_string())
         );
     }
 }
