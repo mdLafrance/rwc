@@ -1,11 +1,6 @@
-#![deny(clippy::implicit_return)]
-#![allow(clippy::needless_return)]
-
 /// Helper functions for rwc cli
 
 use std::{error::Error, fs, io, };
-
-
 
 use clap::Parser;
 
