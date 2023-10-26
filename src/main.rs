@@ -19,9 +19,7 @@ fn main() {
     };
     
     // Perform requested operation. 
-    if args.bytes {
-        println!("{:}", get_byte_count(&buffer));
-    } else if args.chars {
+    if args.chars {
         println!("{:}", get_char_count(&buffer));
     } else if args.lines{
         println!("{:}", get_line_count(&buffer));
@@ -34,7 +32,7 @@ fn main() {
             "{}\t{}\t{}\t{}",
             get_line_count(&buffer),
             get_word_count(&buffer),
-            get_byte_count(&buffer),
+            get_char_count(&buffer),
             match args.source {
                 Some(filename) => filename,
                 _ => "".to_string()

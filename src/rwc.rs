@@ -1,6 +1,6 @@
 /// Helper functions for rwc cli
 
-use std::{error::Error, fs, io};
+use std::{error::Error, fs, io, };
 
 use atty;
 
@@ -12,11 +12,7 @@ pub struct RWCArgs {
     /// Count number of lines
     #[arg(short, long)]
     pub lines: bool,
-
-    /// Count number of bytes
-    #[arg(short, long)]
-    pub bytes: bool,
-
+    
     /// Count number of characters 
     #[arg(short, long)]
     pub chars: bool,
@@ -58,11 +54,6 @@ pub fn get_line_count(buffer: &String) -> usize {
 /// Get the number of characters in the buffer.
 pub fn get_char_count(buffer: &String) -> usize {
     return buffer.chars().count();
-}
-
-/// Get the number of bytes contained in the buffer
-pub fn get_byte_count(buffer: &String) -> usize {
-    return buffer.len();
 }
 
 /// Get count of words in buffer.
