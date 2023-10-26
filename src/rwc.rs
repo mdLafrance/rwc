@@ -46,15 +46,30 @@ pub fn get_buffer_from_args(args: &RWCArgs) -> Result<String, Box<dyn Error>> {
     }
 }
 
+/// Counts the number of newline characters in the given buffer.
+pub fn get_line_count(buffer: &String) -> usize {
+    return buffer.matches("\n").count();
+}
+
+/// Get the number of characters in the buffer.
+pub fn get_char_count(buffer: &String) -> usize {
+    return buffer.chars().count();
+}
+
+/// Get the number of bytes contained in the buffer
+pub fn get_byte_count(buffer: &String) -> usize {
+    return buffer.len();
+}
+
 /// Attempts to read the contents of the given file file_path and return them.
-pub fn read_file_contents(file_path: String) -> Result<String, Box<dyn Error>> {
+fn read_file_contents(file_path: String) -> Result<String, Box<dyn Error>> {
     let file_contents= fs::read_to_string(file_path)?;
 
     return Ok(file_contents);
 }
 
 /// Check if there is data in stdin.
-pub fn data_in_stdin() -> bool {
+fn data_in_stdin() -> bool {
     return !atty::is(atty::Stream::Stdin);
 }
 
@@ -72,19 +87,4 @@ fn read_from_stdin() -> String {
     acc.push_str("\n".into());
 
     return acc;
-}
-
-/// Counts the number of newline characters in the given buffer.
-pub fn get_line_count(buffer: &String) -> usize {
-    return buffer.matches("\n").count();
-}
-
-/// Get the number of characters in the buffer.
-pub fn get_char_count(buffer: &String) -> usize {
-    return buffer.chars().count();
-}
-
-/// Get the number of bytes contained in the buffer
-pub fn get_byte_count(buffer: &String) -> usize {
-    return buffer.len();
 }
