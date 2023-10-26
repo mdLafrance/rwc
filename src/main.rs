@@ -9,7 +9,7 @@ fn main() {
     // Parse cli args.
     let args = RWCArgs::parse();
 
-    // Determine appropriate location to read string buffer from.
+    // Determine appropriate location to read string buffer from (stdin or file).
     let buffer = match get_buffer_from_args(&args) {
         Ok(buffer) => buffer,
         Err(error) => {
@@ -25,19 +25,20 @@ fn main() {
         println!("{:}", get_char_count(&buffer));
     } else if args.lines{
         println!("{:}", get_line_count(&buffer));
+    } else if args.words {
+        println!("{:}", get_word_count(&buffer))
     
-    // Special case - no args. Print all.
     } else {
+        // Special case - no args. Print all.
         println!(
-            "\t{}\t{}\t{}\t{}",
-            get_byte_count(&buffer),
-            get_char_count(&buffer),
+            "{}\t{}\t{}\t{}",
             get_line_count(&buffer),
+            get_word_count(&buffer),
+            get_byte_count(&buffer),
             match args.source {
                 Some(filename) => filename,
                 _ => "".to_string()
             } 
         );
     }
-
 }

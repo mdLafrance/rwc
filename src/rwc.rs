@@ -21,6 +21,10 @@ pub struct RWCArgs {
     #[arg(short, long)]
     pub chars: bool,
 
+    /// Count number of whitespace-delineated words
+    #[arg(short, long)]
+    pub words: bool,
+
     /// String buffer which will be read from
     #[arg(value_name = "SOURCE", index=1)]
     pub source: Option<String>
@@ -59,6 +63,11 @@ pub fn get_char_count(buffer: &String) -> usize {
 /// Get the number of bytes contained in the buffer
 pub fn get_byte_count(buffer: &String) -> usize {
     return buffer.len();
+}
+
+/// Get count of words in buffer.
+pub fn get_word_count(buffer: &String) -> usize {
+    return buffer.split_whitespace().count();
 }
 
 /// Attempts to read the contents of the given file file_path and return them.
