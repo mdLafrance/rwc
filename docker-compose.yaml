@@ -1,0 +1,18 @@
+services:
+  build:
+    image: ${APP}
+    command: cargo build -r
+    build:
+      context: .
+
+  coverage:
+    image: ${APP}
+    command: cargo llvm-cov 
+
+  clippy:
+    image: ${APP}
+    command: cargo clippy -- -D warnings
+
+  format:
+    image: ${APP}
+    command: cargo fmt
