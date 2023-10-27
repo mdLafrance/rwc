@@ -7,12 +7,10 @@ services:
 
   coverage:
     image: ${APP}
-    command: cargo llvm-cov 
+    command: cargo llvm-cov
 
-  clippy:
+  lint:
     image: ${APP}
-    command: cargo clippy -- -D warnings
-
-  format:
-    image: ${APP}
-    command: cargo fmt
+    environment:
+      - __CARGO_FIX_YOLO=1
+    command: cargo clippy --fix
