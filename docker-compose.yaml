@@ -13,4 +13,4 @@ services:
     image: ${APP}
     environment:
       - __CARGO_FIX_YOLO=1
-    command: cargo clippy --fix
+    command: cargo clippy --fix --allow-no-vcs
