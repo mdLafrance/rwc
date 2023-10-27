@@ -15,3 +15,4 @@ Or, the provided [Dockerfile](./Dockerfile) can be used as a dev environment:
 docker build -t rwc-dev .
 docker run --rm -it -v $PWD:/rwc rwc-dev sh
 ```
+The docker compose file also provides lint, formatting, and build services to use as quick build scripts. 
