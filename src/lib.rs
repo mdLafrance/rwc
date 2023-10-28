@@ -45,17 +45,17 @@ pub fn get_buffer_from_args(args: &RWCArgs) -> Result<String, Box<dyn Error>> {
 }
 
 /// Counts the number of newline characters in the given buffer.
-pub fn get_line_count(buffer: &String) -> usize {
+pub fn get_line_count(buffer: &str) -> usize {
     return buffer.matches('\n').count();
 }
 
 /// Get the number of characters in the buffer.
-pub fn get_char_count(buffer: &String) -> usize {
+pub fn get_char_count(buffer: &str) -> usize {
     return buffer.chars().count();
 }
 
 /// Get count of words in buffer.
-pub fn get_word_count(buffer: &String) -> usize {
+pub fn get_word_count(buffer: &str) -> usize {
     return buffer.split_whitespace().count();
 }
 
@@ -79,7 +79,7 @@ fn read_from_stdin() -> String {
     // is this fast for large buffers? probably not. Looks rusty though
     let mut acc = io::stdin()
         .lines()
-        .filter_map(|line| line.ok())
+        .map_while(Result::ok)
         .collect::<Vec<String>>()
         .join("\n");
 
@@ -145,7 +145,7 @@ pub mod tests {
         let buf = get_test_buffer();
 
         assert_eq!(get_line_count(&buf), 43);
-        assert_eq!(get_line_count(&"asdf".to_string()), 0);
+        assert_eq!(get_line_count("asdf"), 0);
     }
 
     #[test]
@@ -153,7 +153,7 @@ pub mod tests {
         let buf = get_test_buffer();
 
         assert_eq!(get_char_count(&buf), 1038);
-        assert_eq!(get_char_count(&"asdf".to_string()), 4);
+        assert_eq!(get_char_count("asdf"), 4);
     }
 
     #[test]
@@ -161,7 +161,7 @@ pub mod tests {
         let buf = get_test_buffer();
 
         assert_eq!(get_word_count(&buf), 177);
-        assert_eq!(get_word_count(&"asdf".to_string()), 1);
+        assert_eq!(get_word_count("asdf"), 1);
     }
 
     #[test]

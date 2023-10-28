@@ -1,3 +1,5 @@
+version: '3'
+
 services:
   build:
     image: ${APP}
@@ -5,12 +7,14 @@ services:
     build:
       context: .
 
-  coverage:
+  test:
     image: ${APP}
     command: cargo llvm-cov
 
   lint:
     image: ${APP}
+    volumes:
+      - ./:/rwc
     environment:
       - __CARGO_FIX_YOLO=1
     command: cargo clippy --fix --allow-no-vcs
