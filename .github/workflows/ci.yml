@@ -28,11 +28,11 @@ jobs:
 
     - name: Use nightly toolchain
       uses: dtolnay/rust-toolchain@nightly
-    
-    - name: Run tests
-      run: cargo test --verbose
 
-    - name: Generate coverage report
+    - name: Use llvm-cov
+      uses: taiki-e/install-action@cargo-llvm-cov
+
+    - name: Generate coverage
       run: cargo llvm-cov --lcov --output-path ./coverage.lcov
 
     - name: Upload coverage to coveralls
